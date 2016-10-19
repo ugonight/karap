@@ -1,6 +1,9 @@
+#include <time.h>
+
 #include "AppDelegate.h"
 //#include "HelloWorldScene.h"
 #include "WakeUpSceneFactory.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -100,6 +103,12 @@ void AppDelegate::applicationDidEnterBackground() {
 
     // if you use SimpleAudioEngine, it must be paused
     // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+
+	int saveTime = (int)time(NULL);
+	//バックグラウンドに移動した時間を記録
+	auto userDefalt = UserDefault::sharedUserDefault();
+	userDefalt->setIntegerForKey("saveTime", saveTime);
+	userDefalt->flush();
 }
 
 // this function will be called when the app is active again
@@ -108,4 +117,10 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+
+	//バックグラウンドに移動した時間を読み込み
+	auto userDefalt = UserDefault::sharedUserDefault();
+	int saveTime = userDefalt->getIntegerForKey("saveTime");
+	auto gameScene = GameScene::sharedGameScene();
+	gameScene->setBaseTime(saveTime);
 }

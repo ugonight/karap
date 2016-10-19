@@ -5,6 +5,15 @@
 
 USING_NS_CC;
 
+//シングルトン
+static GameScene* instanceOfGameScene;
+
+GameScene *GameScene::sharedGameScene() {
+
+	return instanceOfGameScene;
+}
+
+
 bool GameScene::init() {
 	if (Layer::init() == false)
 		return false;
@@ -27,8 +36,10 @@ bool GameScene::init() {
 	//ベース時間の初期化
 	mBaseTime = (int)time(NULL);
 	//xx秒ごとにタスクが出現
-	mFreq = 30;
+	mFreq = 600;
 
+	//シングルトン
+	instanceOfGameScene = this;
 
 	return true;
 }
@@ -58,3 +69,5 @@ void GameScene::update(float delta) {
 		mBaseTime = (int)time(NULL);
 	}
 }
+
+void GameScene::setBaseTime(int t) { mBaseTime = t; }

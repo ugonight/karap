@@ -9,6 +9,10 @@ public:
 
 	CREATE_FUNC(GameScene);
 
+	void setBaseTime(int time);
+
+	static GameScene* sharedGameScene();
+
 private:
 	int mBaseTime;	//アプリ起動時・バックグラウンド時に初期化
 	int mFreq;	//タスク出現の頻度
