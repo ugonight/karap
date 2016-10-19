@@ -33,8 +33,27 @@ bool GameScene::init() {
 		origin.y + visibleSize.height / 2));
 	this->addChild(karap, 1, "karap");
 
+	auto timeLabel = Label::createWithTTF("Hello World", "fonts/APJapanesefontT.ttf", 24);
+	timeLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	timeLabel->setPosition(Vec2(origin.x + 10,
+		origin.y + visibleSize.height - timeLabel->getContentSize().height));
+	timeLabel->setColor(Color3B::BLUE);
+	this->addChild(timeLabel, 1, "timeLabel");
+
 	//ベース時間の初期化
-	mBaseTime = (int)time(NULL);
+	auto userDefalt = UserDefault::sharedUserDefault();
+	int saveTime = userDefalt->getIntegerForKey("saveTime");
+	if (saveTime) { 
+		mBaseTime = saveTime;
+	} else {
+		mBaseTime = (int)time(NULL);
+
+		//時間を記録
+		auto userDefalt = UserDefault::sharedUserDefault();
+		userDefalt->setIntegerForKey("saveTime", mBaseTime);
+		userDefalt->flush();
+	}
+	
 	//xx秒ごとにタスクが出現
 	mFreq = 600;
 
@@ -67,7 +86,20 @@ void GameScene::update(float delta) {
 			this->addChild(task, 2);
 		}
 		mBaseTime = (int)time(NULL);
+
+		//時間を記録
+		auto userDefalt = UserDefault::sharedUserDefault();
+		userDefalt->setIntegerForKey("saveTime", mBaseTime);
+		userDefalt->flush();
+
 	}
+
+
+
+	Label* timeLabel = (Label*)getChildByName("timeLabel");
+	auto sTime = String::createWithFormat("%d", dTime);
+	timeLabel->setString(sTime->getCString());
+
 }
 
 void GameScene::setBaseTime(int t) { mBaseTime = t; }
