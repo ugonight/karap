@@ -33,6 +33,9 @@ bool GameScene::init() {
 		origin.y + visibleSize.height / 2));
 	this->addChild(karap, 1, "karap");
 
+	auto taskLayer = Layer::create();
+	this->addChild(taskLayer, 2, "taskLayer");
+
 	auto timeLabel = Label::createWithTTF("Hello World", "fonts/APJapanesefontT.ttf", 24);
 	timeLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	timeLabel->setPosition(Vec2(origin.x + 10,
@@ -49,13 +52,21 @@ bool GameScene::init() {
 		mBaseTime = (int)time(NULL);
 
 		//時間を記録
-		auto userDefalt = UserDefault::sharedUserDefault();
 		userDefalt->setIntegerForKey("saveTime", mBaseTime);
 		userDefalt->flush();
 	}
+
+	//タスクの数を読み込む
+	mTaskNum = userDefalt->getIntegerForKey("taskNum");
+	for (int i = 0; i < mTaskNum; i++) {
+		auto task = Task::create();
+		taskLayer->addChild(task, 2, "task");
+	}
 	
 	//xx秒ごとにタスクが出現
-	mFreq = 600;
+	mFreq = 60 * 6;
+	//タスクの上限
+	mTaskMax = 50;
 
 	//シングルトン
 	instanceOfGameScene = this;
@@ -67,37 +78,33 @@ void GameScene::update(float delta) {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	int dTime = (int)time(NULL) - mBaseTime;
+	auto userDefalt = UserDefault::sharedUserDefault();
 
+	int dTime = (int)time(NULL) - mBaseTime;
+	auto taskLayer = this->getChildByName("taskLayer");
 
 	if (dTime >= mFreq) {
-		for (int i = 0; i < dTime / mFreq; i++) {
+		for (int i = 0; i < dTime / mFreq && taskLayer->getChildrenCount() < mTaskMax; i++) {
 			auto task = Task::create();
-			//auto task = Sprite::create("task/sigoto.png");
-			//int x = random(50, 430);
-			//int y = random(100,754);
-			//task->setPosition(Vec2(origin.x + x,
-			//	origin.y + y));
-			//task->setScale(random(0.2f,0.6f));
-			//task->setOpacity(0.0f);
-			//task->runAction(FadeIn::create(1.0f));
-			//auto seq = Sequence::create(ScaleBy::create(0.5f, 0.5f), ScaleBy::create(0.5f, 2.0f), NULL);
-			//task->runAction(RepeatForever::create(seq));
-			this->addChild(task, 2);
+			taskLayer->addChild(task, 2, "task");
 		}
-		mBaseTime = (int)time(NULL);
+		mBaseTime = (int)time(NULL) - dTime % mFreq;
 
 		//時間を記録
-		auto userDefalt = UserDefault::sharedUserDefault();
 		userDefalt->setIntegerForKey("saveTime", mBaseTime);
 		userDefalt->flush();
-
 	}
 
-
+	//タスクの数の違いがあったら
+	if (taskLayer->getChildrenCount() != mTaskNum) {
+		mTaskNum = taskLayer->getChildrenCount();
+		//タスクの数を記録
+		userDefalt->setIntegerForKey("taskNum", mTaskNum);
+		userDefalt->flush();
+	}
 
 	Label* timeLabel = (Label*)getChildByName("timeLabel");
-	auto sTime = String::createWithFormat("%d", dTime);
+	auto sTime = String::createWithFormat("%d", mFreq - dTime);
 	timeLabel->setString(sTime->getCString());
 
 }

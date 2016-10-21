@@ -16,4 +16,7 @@ public:
 private:
 	int mBaseTime;	//アプリ起動時・バックグラウンド時に初期化
 	int mFreq;	//タスク出現の頻度
+	int mTaskMax;	//タスクの上限値
+	int mTaskNum;	//表示されているタスクの数
+
 };
