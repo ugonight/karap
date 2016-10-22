@@ -7,12 +7,12 @@
 USING_NS_CC;
 
 //シングルトン
-static GameScene* instanceOfGameScene;
-
-GameScene *GameScene::sharedGameScene() {
-
-	return instanceOfGameScene;
-}
+//static GameScene* instanceOfGameScene;
+//
+//GameScene *GameScene::sharedGameScene() {
+//
+//	return instanceOfGameScene;
+//}
 
 
 bool GameScene::init() {
@@ -24,21 +24,55 @@ bool GameScene::init() {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	auto userDefalt = UserDefault::sharedUserDefault();
+
+	//背景
 	auto back = Sprite::create("room.png");
 	back->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
 	this->addChild(back, 0, "back");
 
+	//カラぴ
 	auto karap = Sprite::create("nomal.png");
 	karap->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
 	this->addChild(karap, 1, "karap");
 
+	//タスクを表示させるレイヤー
 	auto taskLayer = Layer::create();
 	this->addChild(taskLayer, 2, "taskLayer");
 
+	//セリフを表示させるレイヤー
 	auto speakLayer = Speak::create();
 	this->addChild(speakLayer, 5, "speakLayer");
+
+
+	//進捗状況を読み込む
+	mProgress = 0.0f;
+	mProgress = userDefalt->getFloatForKey("progress");
+
+	//進捗
+	auto pFrame = Sprite::create("progress.png");
+	pFrame->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	pFrame->setPosition(Vec2(origin.x + 20, origin.y + visibleSize.height - 50));
+	addChild(pFrame, 6, "pFrame");
+	auto progressBar = Sprite::create("sintyoku.png");
+	auto pTimer = ProgressTimer::create(progressBar);
+	pTimer->setPercentage(0.0f);
+	pTimer->setType(kCCProgressTimerTypeBar);
+	pTimer->setBarChangeRate(Vec2(1, 0));
+	pTimer->setMidpoint(Vec2(0, 0));
+	pTimer->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	pTimer->setPosition(Vec2(origin.x + 20, origin.y + visibleSize.height - 50));
+	addChild(pTimer, 7, "progress");
+	pTimer->setPercentage(mProgress);
+
+	//パーセント表示用テキスト
+	auto percentTxt = Label::createWithTTF(String::createWithFormat("%d%%", (int)mProgress)->getCString(), "fonts/APJapanesefontT.ttf", 20);
+	percentTxt->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	percentTxt->setColor(Color3B::BLACK);
+	percentTxt->setPosition(Vec2(pTimer->getPositionX(), pTimer->getPositionY() - 30));
+	addChild(percentTxt, 7,"progressText");
 
 	auto timeLabel = Label::createWithTTF("Hello World", "fonts/APJapanesefontT.ttf", 24);
 	timeLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
@@ -48,7 +82,6 @@ bool GameScene::init() {
 	this->addChild(timeLabel, 1, "timeLabel");
 
 	//ベース時間の初期化
-	auto userDefalt = UserDefault::sharedUserDefault();
 	int saveTime = userDefalt->getIntegerForKey("saveTime");
 	if (saveTime) { 
 		mBaseTime = saveTime;
@@ -73,7 +106,7 @@ bool GameScene::init() {
 	mTaskMax = 50;
 
 	//シングルトン
-	instanceOfGameScene = this;
+	//instanceOfGameScene = this;
 
 	return true;
 }
@@ -107,6 +140,13 @@ void GameScene::update(float delta) {
 		userDefalt->flush();
 	}
 
+	auto pTimer = (ProgressTimer*)this->getChildByName("progress");
+	float percent = pTimer->getPercentage();
+	if (percent < mProgress) {
+		//プログレスバーを進める
+		pTimer->setPercentage(percent + 0.1);
+	}
+
 	Label* timeLabel = (Label*)getChildByName("timeLabel");
 	auto sTime = String::createWithFormat("%d, %d", mFreq - dTime, mTaskNum);
 	timeLabel->setString(sTime->getCString());
@@ -124,4 +164,19 @@ void GameScene::showPunch(int x, int y) {
 	punch->runAction(seq1);
 	punch->runAction(ScaleBy::create(0.4f, 2.0f));
 	this->addChild(punch, 3, "punch");
+}
+
+void GameScene::addProgress() {
+	auto userDefalt = UserDefault::sharedUserDefault();
+
+	mProgress += 1.0f;
+	auto percentTxt = (Label*)this->getChildByName("progressText");
+	percentTxt->setString(String::createWithFormat("%d%%", (int)mProgress)->getCString());
+	//進捗を記録
+	userDefalt->setFloatForKey("progress", mProgress);
+	userDefalt->flush();
+
+	if (mProgress >= 100.0f) {
+		percentTxt->setString("Completed!");
+	}
 }

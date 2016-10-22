@@ -17,7 +17,7 @@ bool Task::init()
 	//各パラメーターの初期化
 	int x = random(50, 430);
 	int y = random(100, 754);
-	switch (random(0,3))
+	switch (random(0,5))
 	{
 	case 0:
 		this->setTexture("sigoto.png");
@@ -30,6 +30,12 @@ bool Task::init()
 		break;
 	case 3:
 		this->setTexture("report.png");
+		break;
+	case 4:
+		this->setTexture("baito.png");
+		break;
+	case 5:
+		this->setTexture("kaji.png");
 		break;
 	default:
 		break;
@@ -52,12 +58,14 @@ bool Task::init()
 		Point touchPoint = Vec2(touch->getLocation().x, touch->getLocation().y);
 		if (targetBox.containsPoint(touchPoint))
 		{
+			auto parent = (GameScene*)this->getParent()->getParent();
+
 			mHP--;
 			if (mHP == 0) {	//HPが0になったら
 				this->runAction(Sequence::create(FadeOut::create(1.0f), RemoveSelf::create(), NULL));
+				parent->addProgress();
 			}
 
-			auto parent = (GameScene*)this->getParent();
 			parent->showPunch(touch->getLocation().x, touch->getLocation().y);
 
 			return true;
