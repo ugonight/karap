@@ -1,4 +1,5 @@
 #include "Task.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 using namespace std;
@@ -55,6 +56,9 @@ bool Task::init()
 			if (mHP == 0) {	//HP‚ª0‚É‚È‚Á‚½‚ç
 				this->runAction(Sequence::create(FadeOut::create(1.0f), RemoveSelf::create(), NULL));
 			}
+
+			auto parent = (GameScene*)this->getParent();
+			parent->showPunch(touch->getLocation().x, touch->getLocation().y);
 
 			return true;
 		}

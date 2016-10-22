@@ -13,6 +13,8 @@ public:
 
 	static GameScene* sharedGameScene();
 
+	void showPunch(int x, int y);
+
 private:
 	int mBaseTime;	//アプリ起動時・バックグラウンド時に初期化
 	int mFreq;	//タスク出現の頻度

@@ -2,6 +2,7 @@
 
 #include "GameScene.h"
 #include "Task.h"
+#include "speak.h"
 
 USING_NS_CC;
 
@@ -35,6 +36,9 @@ bool GameScene::init() {
 
 	auto taskLayer = Layer::create();
 	this->addChild(taskLayer, 2, "taskLayer");
+
+	auto speakLayer = Speak::create();
+	this->addChild(speakLayer, 5, "speakLayer");
 
 	auto timeLabel = Label::createWithTTF("Hello World", "fonts/APJapanesefontT.ttf", 24);
 	timeLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
@@ -104,9 +108,20 @@ void GameScene::update(float delta) {
 	}
 
 	Label* timeLabel = (Label*)getChildByName("timeLabel");
-	auto sTime = String::createWithFormat("%d", mFreq - dTime);
+	auto sTime = String::createWithFormat("%d, %d", mFreq - dTime, mTaskNum);
 	timeLabel->setString(sTime->getCString());
 
 }
 
 void GameScene::setBaseTime(int t) { mBaseTime = t; }
+
+void GameScene::showPunch(int x, int y) {
+	auto punch = Sprite::create("punch.png");
+	punch->setPosition(Vec2(x, y));
+	punch->setOpacity(0.0f);
+	punch->setScale(0.5f);
+	auto seq1 = Sequence::create(FadeIn::create(0.2f), FadeOut::create(0.2f), RemoveSelf::create(), NULL);
+	punch->runAction(seq1);
+	punch->runAction(ScaleBy::create(0.4f, 2.0f));
+	this->addChild(punch, 3, "punch");
+}
