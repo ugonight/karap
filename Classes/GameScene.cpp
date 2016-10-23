@@ -24,7 +24,7 @@ bool GameScene::init() {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto userDefalt = UserDefault::sharedUserDefault();
+	auto userDefalt = UserDefault::getInstance();
 
 	//背景
 	auto back = Sprite::create("room.png");
@@ -40,11 +40,12 @@ bool GameScene::init() {
 
 	//タスクを表示させるレイヤー
 	auto taskLayer = Layer::create();
+
 	this->addChild(taskLayer, 2, "taskLayer");
 
 	//セリフを表示させるレイヤー
-	auto speakLayer = Speak::create();
-	this->addChild(speakLayer, 5, "speakLayer");
+	//auto speakLayer = Speak::create();
+	//this->addChild(speakLayer, 5, "speakLayer");
 
 
 	//進捗状況を読み込む
@@ -72,7 +73,7 @@ bool GameScene::init() {
 	percentTxt->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	percentTxt->setColor(Color3B::BLACK);
 	percentTxt->setPosition(Vec2(pTimer->getPositionX(), pTimer->getPositionY() - 30));
-	addChild(percentTxt, 7,"progressText");
+	addChild(percentTxt, 7, "progressText");
 
 	auto timeLabel = Label::createWithTTF("Hello World", "fonts/APJapanesefontT.ttf", 24);
 	timeLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
@@ -83,9 +84,10 @@ bool GameScene::init() {
 
 	//ベース時間の初期化
 	int saveTime = userDefalt->getIntegerForKey("saveTime");
-	if (saveTime) { 
+	if (saveTime) {
 		mBaseTime = saveTime;
-	} else {
+	}
+	else {
 		mBaseTime = (int)time(NULL);
 
 		//時間を記録
@@ -99,7 +101,7 @@ bool GameScene::init() {
 		auto task = Task::create();
 		taskLayer->addChild(task, 2, "task");
 	}
-	
+
 	//xx秒ごとにタスクが出現
 	mFreq = 60 * 6;
 	//タスクの上限
@@ -115,7 +117,7 @@ void GameScene::update(float delta) {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto userDefalt = UserDefault::sharedUserDefault();
+	auto userDefalt = UserDefault::getInstance();
 
 	int dTime = (int)time(NULL) - mBaseTime;
 	auto taskLayer = this->getChildByName("taskLayer");
@@ -128,16 +130,16 @@ void GameScene::update(float delta) {
 		mBaseTime = (int)time(NULL) - dTime % mFreq;
 
 		//時間を記録
-		userDefalt->setIntegerForKey("saveTime", mBaseTime);
-		userDefalt->flush();
+		//userDefalt->setIntegerForKey("saveTime", mBaseTime);
+		//userDefalt->flush();
 	}
 
 	//タスクの数の違いがあったら
 	if (taskLayer->getChildrenCount() != mTaskNum) {
 		mTaskNum = taskLayer->getChildrenCount();
 		//タスクの数を記録
-		userDefalt->setIntegerForKey("taskNum", mTaskNum);
-		userDefalt->flush();
+		//userDefalt->setIntegerForKey("taskNum", mTaskNum);
+		//userDefalt->flush();
 	}
 
 	auto pTimer = (ProgressTimer*)this->getChildByName("progress");
@@ -145,6 +147,15 @@ void GameScene::update(float delta) {
 	if (percent < mProgress) {
 		//プログレスバーを進める
 		pTimer->setPercentage(percent + 0.1);
+	}
+
+	auto percentTxt = (Label*)this->getChildByName("progressText");
+	if (mProgress >= 100.0f) {
+		percentTxt->setString("Completed!");
+		auto speakLayer = Speak::create();
+		this->addChild(speakLayer, 5, "speakLayer");
+		mProgress = 0.0f;
+		pTimer->setPercentage(0.0f);
 	}
 
 	Label* timeLabel = (Label*)getChildByName("timeLabel");
@@ -167,7 +178,7 @@ void GameScene::showPunch(int x, int y) {
 }
 
 void GameScene::addProgress() {
-	auto userDefalt = UserDefault::sharedUserDefault();
+	auto userDefalt = UserDefault::getInstance();
 
 	mProgress += 1.0f;
 	auto percentTxt = (Label*)this->getChildByName("progressText");
@@ -175,8 +186,4 @@ void GameScene::addProgress() {
 	//進捗を記録
 	userDefalt->setFloatForKey("progress", mProgress);
 	userDefalt->flush();
-
-	if (mProgress >= 100.0f) {
-		percentTxt->setString("Completed!");
-	}
 }

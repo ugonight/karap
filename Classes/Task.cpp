@@ -17,7 +17,7 @@ bool Task::init()
 	//各パラメーターの初期化
 	int x = random(50, 430);
 	int y = random(100, 754);
-	switch (random(0,5))
+	switch (random(0, 5))
 	{
 	case 0:
 		this->setTexture("sigoto.png");
