@@ -1,3 +1,5 @@
+ï»¿#pragma execution_character_set("utf-8")
+
 #include "speak.h"
 
 #define kModalLayerPriority 1
@@ -21,11 +23,11 @@ bool Speak::init()
 	msgBox->runAction(MoveBy::create(0.3f, Vec2(0, 50)));
 	this->addChild(msgBox, 0, "msgbox");
 
-	auto label1 = Label::createWithTTF("Hello,World!", "fonts/APJapanesefontT.ttf", 24);
-	label1->setDimensions(440, 280);
+	auto label1 = Label::createWithTTF("ã”è‹¦åŠ´ã ã£ãŸãªã‚¬ãƒ¼ãƒ«", "fonts/APJapanesefontT.ttf", 30);
+	label1->setDimensions(440, 270);
 	label1->setTextColor(Color4B::WHITE);
 	label1->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-	label1->setPosition(Vec2(20, 280));
+	label1->setPosition(Vec2(20, 270));
 	this->addChild(label1);
 	for (int i = 0; i < label1->getStringLength() + label1->getStringNumLines(); i++) {
 		auto AChar = label1->getLetter(i);
@@ -40,7 +42,7 @@ bool Speak::init()
 	}
 
 	auto listener = EventListenerTouchOneByOne::create();
-	listener->setSwallowTouches(true);	//—Dæ‡ˆÊ‚Ì‚‚¢ƒCƒxƒ“ƒg‚¾‚¯‚ðŽÀs‚·‚é
+	listener->setSwallowTouches(true);	//å„ªå…ˆé †ä½ã®é«˜ã„ã‚¤ãƒ™ãƒ³ãƒˆã ã‘ã‚’å®Ÿè¡Œã™ã‚‹
 	listener->onTouchBegan = [&](Touch *touch, Event*event)->bool {
 		auto box = this->getChildByName("msgbox");
 		box->runAction(FadeOut::create(0.3f));

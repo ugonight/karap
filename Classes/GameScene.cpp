@@ -103,7 +103,7 @@ bool GameScene::init() {
 	}
 
 	//xx秒ごとにタスクが出現
-	mFreq = 60 * 6;
+	mFreq = 1;// 60 * 6;
 	//タスクの上限
 	mTaskMax = 50;
 
@@ -130,16 +130,16 @@ void GameScene::update(float delta) {
 		mBaseTime = (int)time(NULL) - dTime % mFreq;
 
 		//時間を記録
-		//userDefalt->setIntegerForKey("saveTime", mBaseTime);
-		//userDefalt->flush();
+		userDefalt->setIntegerForKey("saveTime", mBaseTime);
+		userDefalt->flush();
 	}
 
 	//タスクの数の違いがあったら
 	if (taskLayer->getChildrenCount() != mTaskNum) {
 		mTaskNum = taskLayer->getChildrenCount();
 		//タスクの数を記録
-		//userDefalt->setIntegerForKey("taskNum", mTaskNum);
-		//userDefalt->flush();
+		userDefalt->setIntegerForKey("taskNum", mTaskNum);
+		userDefalt->flush();
 	}
 
 	auto pTimer = (ProgressTimer*)this->getChildByName("progress");
