@@ -28,15 +28,15 @@ bool Speak::init()
 	label1->setTextColor(Color4B::WHITE);
 	label1->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	label1->setPosition(Vec2(20, 270));
-	this->addChild(label1);
+	this->addChild(label1, 1, "msg");
 	for (int i = 0; i < label1->getStringLength() + label1->getStringNumLines(); i++) {
 		auto AChar = label1->getLetter(i);
 		if (nullptr != AChar) {
-			AChar->setVisible(false);
+			AChar->setOpacity(0.0f);
 			AChar->runAction(
 				Sequence::createWithTwoActions(
-					DelayTime::create(0.2f*i),
-					Show::create()
+					DelayTime::create(0.1f*i),
+					FadeIn::create(0.1f)
 				));
 		}
 	}
@@ -44,9 +44,20 @@ bool Speak::init()
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);	//優先順位の高いイベントだけを実行する
 	listener->onTouchBegan = [&](Touch *touch, Event*event)->bool {
-		auto box = this->getChildByName("msgbox");
-		box->runAction(FadeOut::create(0.3f));
-		this->runAction(Sequence::create(FadeIn::create(0.3f), RemoveSelf::create(), NULL));
+		if (endCheck()) {
+			auto box = this->getChildByName("msgbox");
+			box->runAction(FadeOut::create(0.3f));
+			this->runAction(Sequence::create(FadeIn::create(0.3f), RemoveSelf::create(), NULL));
+		}
+		else {
+			auto label = (Label*)getChildByName("msg");
+			for (int i = 0; i < label->getStringLength() + label->getStringNumLines(); i++) {
+				auto AChar = label->getLetter(i);
+				if (nullptr != AChar) {
+					AChar->setOpacity(255);
+				}
+			}
+		}
 
 		return true;
 	};
@@ -56,5 +67,18 @@ bool Speak::init()
 
 
 
+	return true;
+}
+
+bool Speak::endCheck() {
+	auto label = (Label*)getChildByName("msg");
+	for (int i = 0; i < label->getStringLength() + label->getStringNumLines(); i++) {
+		auto AChar = label->getLetter(i);
+		if (nullptr != AChar) {
+			if (AChar->getOpacity() < 255) {
+				return false;
+			}
+		}
+	}
 	return true;
 }

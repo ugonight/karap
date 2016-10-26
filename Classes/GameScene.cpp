@@ -37,6 +37,9 @@ bool GameScene::init() {
 	karap->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
 	this->addChild(karap, 1, "karap");
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->onTouchBegan = CC_CALLBACK_2(GameScene::karapTouch, this);
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, karap);
 
 	//タスクを表示させるレイヤー
 	auto taskLayer = Layer::create();
@@ -103,9 +106,11 @@ bool GameScene::init() {
 	}
 
 	//xx秒ごとにタスクが出現
-	mFreq = 1;// 60 * 6;
+	mFreq = 60 * 6;
 	//タスクの上限
 	mTaskMax = 50;
+	//showPunchが呼び出されているか
+	mPunch = 0;
 
 	//シングルトン
 	//instanceOfGameScene = this;
@@ -121,6 +126,8 @@ void GameScene::update(float delta) {
 
 	int dTime = (int)time(NULL) - mBaseTime;
 	auto taskLayer = this->getChildByName("taskLayer");
+
+	mPunch = 0;
 
 	if (dTime >= mFreq) {
 		for (int i = 0; i < dTime / mFreq && taskLayer->getChildrenCount() < mTaskMax; i++) {
@@ -156,6 +163,9 @@ void GameScene::update(float delta) {
 		this->addChild(speakLayer, 5, "speakLayer");
 		mProgress = 0.0f;
 		pTimer->setPercentage(0.0f);
+		//進捗を記録
+		userDefalt->setFloatForKey("progress", mProgress);
+		userDefalt->flush();
 	}
 
 	Label* timeLabel = (Label*)getChildByName("timeLabel");
@@ -167,14 +177,17 @@ void GameScene::update(float delta) {
 void GameScene::setBaseTime(int t) { mBaseTime = t; }
 
 void GameScene::showPunch(int x, int y) {
-	auto punch = Sprite::create("punch.png");
-	punch->setPosition(Vec2(x, y));
-	punch->setOpacity(0.0f);
-	punch->setScale(0.5f);
-	auto seq1 = Sequence::create(FadeIn::create(0.2f), FadeOut::create(0.2f), RemoveSelf::create(), NULL);
-	punch->runAction(seq1);
-	punch->runAction(ScaleBy::create(0.4f, 2.0f));
-	this->addChild(punch, 3, "punch");
+	if (!mPunch) {
+		mPunch = 1;
+		auto punch = Sprite::create("punch.png");
+		punch->setPosition(Vec2(x, y));
+		punch->setOpacity(0.0f);
+		punch->setScale(0.5f);
+		auto seq1 = Sequence::create(FadeIn::create(0.2f), FadeOut::create(0.2f), RemoveSelf::create(), NULL);
+		punch->runAction(seq1);
+		punch->runAction(ScaleBy::create(0.4f, 2.0f));
+		this->addChild(punch, 3, "punch");
+	}
 }
 
 void GameScene::addProgress() {
@@ -186,4 +199,13 @@ void GameScene::addProgress() {
 	//進捗を記録
 	userDefalt->setFloatForKey("progress", mProgress);
 	userDefalt->flush();
+}
+
+bool GameScene::karapTouch(Touch *touch, Event *event) {
+	if (mTaskNum == 0) {
+		auto speakLayer = Speak::create();
+		this->addChild(speakLayer, 5, "speakLayer");
+	}
+
+	return true;
 }

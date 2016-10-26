@@ -10,5 +10,5 @@ public:
 	CREATE_FUNC(Speak);
 
 private:
-
+	bool endCheck();	//メッセージが表示しきっているか
 };

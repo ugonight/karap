@@ -22,5 +22,8 @@ private:
 	int mTaskMax;	//タスクの上限値
 	int mTaskNum;	//表示されているタスクの数
 	float mProgress;	//実際の進捗
+	bool mPunch; //showPunchが一フレームに一回だけ読み込まれるようにする
+
+	bool karapTouch(cocos2d::Touch *touch, cocos2d::Event *event);	//カラぴタッチイベント
 
 };
