@@ -1,10 +1,13 @@
 ﻿#pragma execution_character_set("utf-8")
 
+#include <string>
+
 #include "speak.h"
 
 #define kModalLayerPriority 1
 
 USING_NS_CC;
+
 
 bool Speak::init()
 {
@@ -29,17 +32,7 @@ bool Speak::init()
 	label1->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	label1->setPosition(Vec2(20, 270));
 	this->addChild(label1, 1, "msg");
-	for (int i = 0; i < label1->getStringLength() + label1->getStringNumLines(); i++) {
-		auto AChar = label1->getLetter(i);
-		if (nullptr != AChar) {
-			AChar->setOpacity(0.0f);
-			AChar->runAction(
-				Sequence::createWithTwoActions(
-					DelayTime::create(0.1f*i),
-					FadeIn::create(0.1f)
-				));
-		}
-	}
+	setDelayAnime();
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);	//優先順位の高いイベントだけを実行する
@@ -70,6 +63,14 @@ bool Speak::init()
 	return true;
 }
 
+void Speak::setID(std::string id) {
+	auto label1 = (Label*)getChildByName("msg");
+	if (id == "finish") {
+		label1->setString("よく頑張ったな");
+	}
+	setDelayAnime();
+}
+
 bool Speak::endCheck() {
 	auto label = (Label*)getChildByName("msg");
 	for (int i = 0; i < label->getStringLength() + label->getStringNumLines(); i++) {
@@ -81,4 +82,20 @@ bool Speak::endCheck() {
 		}
 	}
 	return true;
+}
+
+void Speak::setDelayAnime() {
+	auto label1 = (Label*)getChildByName("msg");
+
+	for (int i = 0; i < label1->getStringLength() + label1->getStringNumLines(); i++) {
+		auto AChar = label1->getLetter(i);
+		if (nullptr != AChar) {
+			AChar->setOpacity(0.0f);
+			AChar->runAction(
+				Sequence::createWithTwoActions(
+					DelayTime::create(0.1f*i),
+					FadeIn::create(0.1f)
+				));
+		}
+	}
 }

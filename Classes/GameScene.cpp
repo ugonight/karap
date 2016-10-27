@@ -160,6 +160,7 @@ void GameScene::update(float delta) {
 	if (mProgress >= 100.0f) {
 		percentTxt->setString("Completed!");
 		auto speakLayer = Speak::create();
+		speakLayer->setID("finish");
 		this->addChild(speakLayer, 5, "speakLayer");
 		mProgress = 0.0f;
 		pTimer->setPercentage(0.0f);
@@ -202,10 +203,17 @@ void GameScene::addProgress() {
 }
 
 bool GameScene::karapTouch(Touch *touch, Event *event) {
+	auto target = (Sprite*)event->getCurrentTarget();
+	Rect targetBox = target->getBoundingBox();
+	Point touchPoint = Vec2(touch->getLocation().x, touch->getLocation().y);
+	if (targetBox.containsPoint(touchPoint))
+	{
 	if (mTaskNum == 0) {
 		auto speakLayer = Speak::create();
 		this->addChild(speakLayer, 5, "speakLayer");
 	}
-
 	return true;
+	}
+
+	return false;
 }
