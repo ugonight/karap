@@ -1,3 +1,5 @@
+ï»¿#pragma execution_character_set("utf-8")
+
 #include <time.h>
 
 #include "GameScene.h"
@@ -5,8 +7,9 @@
 #include "speak.h"
 
 USING_NS_CC;
+using namespace ui;
 
-//ƒVƒ“ƒOƒ‹ƒgƒ“
+//ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³
 //static GameScene* instanceOfGameScene;
 //
 //GameScene *GameScene::sharedGameScene() {
@@ -26,13 +29,13 @@ bool GameScene::init() {
 
 	auto userDefalt = UserDefault::getInstance();
 
-	//”wŒi
+	//èƒŒæ™¯
 	auto back = Sprite::create("room.png");
 	back->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
 	this->addChild(back, 0, "back");
 
-	//ƒJƒ‰‚Ò
+	//ã‚«ãƒ©ã´
 	auto karap = Sprite::create("nomal.png");
 	karap->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
@@ -41,21 +44,21 @@ bool GameScene::init() {
 	listener->onTouchBegan = CC_CALLBACK_2(GameScene::karapTouch, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, karap);
 
-	//ƒ^ƒXƒN‚ð•\Ž¦‚³‚¹‚éƒŒƒCƒ„[
+	//ã‚¿ã‚¹ã‚¯ã‚’è¡¨ç¤ºã•ã›ã‚‹ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	auto taskLayer = Layer::create();
 
 	this->addChild(taskLayer, 2, "taskLayer");
 
-	//ƒZƒŠƒt‚ð•\Ž¦‚³‚¹‚éƒŒƒCƒ„[
+	//ã‚»ãƒªãƒ•ã‚’è¡¨ç¤ºã•ã›ã‚‹ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	//auto speakLayer = Speak::create();
 	//this->addChild(speakLayer, 5, "speakLayer");
 
 
-	//i’»ó‹µ‚ð“Ç‚Ýž‚Þ
+	//é€²æ—çŠ¶æ³ã‚’èª­ã¿è¾¼ã‚€
 	mProgress = 0.0f;
 	mProgress = userDefalt->getFloatForKey("progress");
 
-	//i’»
+	//é€²æ—
 	auto pFrame = Sprite::create("progress.png");
 	pFrame->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	pFrame->setPosition(Vec2(origin.x + 20, origin.y + visibleSize.height - 50));
@@ -71,7 +74,7 @@ bool GameScene::init() {
 	addChild(pTimer, 7, "progress");
 	pTimer->setPercentage(mProgress);
 
-	//ƒp[ƒZƒ“ƒg•\Ž¦—pƒeƒLƒXƒg
+	//ãƒ‘ãƒ¼ã‚»ãƒ³ãƒˆè¡¨ç¤ºç”¨ãƒ†ã‚­ã‚¹ãƒˆ
 	auto percentTxt = Label::createWithTTF(String::createWithFormat("%d%%", (int)mProgress)->getCString(), "fonts/APJapanesefontT.ttf", 20);
 	percentTxt->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	percentTxt->setColor(Color3B::BLACK);
@@ -85,7 +88,7 @@ bool GameScene::init() {
 	timeLabel->setColor(Color3B::BLUE);
 	this->addChild(timeLabel, 1, "timeLabel");
 
-	//ƒx[ƒXŽžŠÔ‚Ì‰Šú‰»
+	//ãƒ™ãƒ¼ã‚¹æ™‚é–“ã®åˆæœŸåŒ–
 	int saveTime = userDefalt->getIntegerForKey("saveTime");
 	if (saveTime) {
 		mBaseTime = saveTime;
@@ -93,26 +96,28 @@ bool GameScene::init() {
 	else {
 		mBaseTime = (int)time(NULL);
 
-		//ŽžŠÔ‚ð‹L˜^
+		//æ™‚é–“ã‚’è¨˜éŒ²
 		userDefalt->setIntegerForKey("saveTime", mBaseTime);
 		userDefalt->flush();
 	}
 
-	//ƒ^ƒXƒN‚Ì”‚ð“Ç‚Ýž‚Þ
+	//ã‚¿ã‚¹ã‚¯ã®æ•°ã‚’èª­ã¿è¾¼ã‚€
 	mTaskNum = userDefalt->getIntegerForKey("taskNum");
 	for (int i = 0; i < mTaskNum; i++) {
 		auto task = Task::create();
 		taskLayer->addChild(task, 2, "task");
 	}
 
-	//xx•b‚²‚Æ‚Éƒ^ƒXƒN‚ªoŒ»
+	//xxç§’ã”ã¨ã«ã‚¿ã‚¹ã‚¯ãŒå‡ºç¾
 	mFreq = 60 * 6;
-	//ƒ^ƒXƒN‚ÌãŒÀ
+	//ã‚¿ã‚¹ã‚¯ã®ä¸Šé™
 	mTaskMax = 50;
-	//showPunch‚ªŒÄ‚Ño‚³‚ê‚Ä‚¢‚é‚©
+	//showPunchãŒå‘¼ã³å‡ºã•ã‚Œã¦ã„ã‚‹ã‹
 	mPunch = 0;
+	//å…¥åŠ›ãƒ•ã‚©ãƒ¼ãƒ ãŒè¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹ã‹
+	mInput = 0;
 
-	//ƒVƒ“ƒOƒ‹ƒgƒ“
+	//ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³
 	//instanceOfGameScene = this;
 
 	return true;
@@ -136,15 +141,15 @@ void GameScene::update(float delta) {
 		}
 		mBaseTime = (int)time(NULL) - dTime % mFreq;
 
-		//ŽžŠÔ‚ð‹L˜^
+		//æ™‚é–“ã‚’è¨˜éŒ²
 		userDefalt->setIntegerForKey("saveTime", mBaseTime);
 		userDefalt->flush();
 	}
 
-	//ƒ^ƒXƒN‚Ì”‚Ìˆá‚¢‚ª‚ ‚Á‚½‚ç
+	//ã‚¿ã‚¹ã‚¯ã®æ•°ã®é•ã„ãŒã‚ã£ãŸã‚‰
 	if (taskLayer->getChildrenCount() != mTaskNum) {
 		mTaskNum = taskLayer->getChildrenCount();
-		//ƒ^ƒXƒN‚Ì”‚ð‹L˜^
+		//ã‚¿ã‚¹ã‚¯ã®æ•°ã‚’è¨˜éŒ²
 		userDefalt->setIntegerForKey("taskNum", mTaskNum);
 		userDefalt->flush();
 	}
@@ -152,7 +157,7 @@ void GameScene::update(float delta) {
 	auto pTimer = (ProgressTimer*)this->getChildByName("progress");
 	float percent = pTimer->getPercentage();
 	if (percent < mProgress) {
-		//ƒvƒƒOƒŒƒXƒo[‚ði‚ß‚é
+		//ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒãƒ¼ã‚’é€²ã‚ã‚‹
 		pTimer->setPercentage(percent + 0.1);
 	}
 
@@ -164,7 +169,7 @@ void GameScene::update(float delta) {
 		this->addChild(speakLayer, 5, "speakLayer");
 		mProgress = 0.0f;
 		pTimer->setPercentage(0.0f);
-		//i’»‚ð‹L˜^
+		//é€²æ—ã‚’è¨˜éŒ²
 		userDefalt->setFloatForKey("progress", mProgress);
 		userDefalt->flush();
 	}
@@ -197,23 +202,133 @@ void GameScene::addProgress() {
 	mProgress += 1.0f;
 	auto percentTxt = (Label*)this->getChildByName("progressText");
 	percentTxt->setString(String::createWithFormat("%d%%", (int)mProgress)->getCString());
-	//i’»‚ð‹L˜^
+	//é€²æ—ã‚’è¨˜éŒ²
 	userDefalt->setFloatForKey("progress", mProgress);
 	userDefalt->flush();
 }
 
 bool GameScene::karapTouch(Touch *touch, Event *event) {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
 	auto target = (Sprite*)event->getCurrentTarget();
 	Rect targetBox = target->getBoundingBox();
 	Point touchPoint = Vec2(touch->getLocation().x, touch->getLocation().y);
+
 	if (targetBox.containsPoint(touchPoint))
 	{
-	if (mTaskNum == 0) {
-		auto speakLayer = Speak::create();
-		this->addChild(speakLayer, 5, "speakLayer");
-	}
-	return true;
+		if (mTaskNum == 0 && mInput == 0) {	//ã‚¿ã‚¹ã‚¯ç„¡ã—ã§ã‚«ãƒ©ã´ã‚’ã‚¿ãƒƒãƒ—ã—ãŸã‚‰
+
+			mInput = 1;
+
+			auto editFrame = Sprite::create("inputf.png");
+			editFrame->setPosition(Vec2(origin.x + visibleSize.width / 2,
+				origin.y + visibleSize.height / 2));
+			auto listener = EventListenerTouchOneByOne::create();
+			listener->setSwallowTouches(true);
+			listener->onTouchBegan = CC_CALLBACK_2(GameScene::InputCancel, this);
+			this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, editFrame);
+			editFrame->setOpacity(0.0f);
+			editFrame->runAction(FadeIn::create(0.2f));
+			this->addChild(editFrame, 9, "editFrame");
+			auto editLabel = Label::createWithTTF("å”æ¾ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ã‚Šã¾ã—ã‚‡ã†", "fonts/APJapanesefontT.ttf", 24);
+			editLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
+				origin.y + visibleSize.height / 2 + 100));
+			editLabel->setColor(Color3B::BLACK);
+			editLabel->setOpacity(0.0f);
+			editLabel->runAction(FadeIn::create(0.2f));
+			this->addChild(editLabel, 10, "editLabel");
+			auto editButton = Sprite::create("enter.png");
+			editButton->setPosition(Vec2(origin.x + visibleSize.width / 2,
+				origin.y + visibleSize.height / 2 - 80));
+			auto listener2 = EventListenerTouchOneByOne::create();
+			listener2->onTouchBegan = CC_CALLBACK_2(GameScene::InputEnter, this);
+			listener2->setSwallowTouches(true);
+			this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener2, editButton);
+			editButton->setOpacity(0.0f);
+			editButton->runAction(FadeIn::create(0.2f));
+			this->addChild(editButton, 10, "editButton");
+			auto editBox = EditBox::create(Size(340, 60), "inputb.png");
+			editBox->setFont("fonts/APJapanesefontT.ttf", 32);
+			editBox->setPlaceHolder("ã²ã‚‰ãŒãª10æ–‡å­—ä»¥å†…");
+			editBox->setFontColor(Color4B(0, 0, 0, 255));
+			editBox->setMaxLength(10);
+			editBox->setText("");
+			editBox->setReturnType(EditBox::KeyboardReturnType::DONE);
+			editBox->setInputMode(EditBox::InputMode::SINGLE_LINE);
+			editBox->setPosition(Vec2(origin.x + visibleSize.width / 2,
+				origin.y + visibleSize.height / 2 + 20));
+			editBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+			editBox->setDelegate(this);
+			editBox->setOpacity(0.0f);
+			editBox->runAction(FadeIn::create(0.2f));
+			this->addChild(editBox, 10, "editBox");
+
+
+		}
+		return true;
 	}
 
 	return false;
+}
+
+void GameScene::editBoxEditingDidBegin(EditBox* editBox) {
+}
+
+void GameScene::editBoxEditingDidEnd(EditBox* editBox) {
+}
+
+void GameScene::editBoxTextChanged(EditBox* editBox, const std::string& text) {
+}
+
+void GameScene::editBoxReturn(EditBox* editBox) {
+}
+
+bool GameScene::InputCancel(Touch *touch, Event *event) {
+	auto target = (Sprite*)event->getCurrentTarget();
+	Rect targetBox = target->getBoundingBox();
+	Point touchPoint = Vec2(touch->getLocation().x, touch->getLocation().y);
+
+	if (!targetBox.containsPoint(touchPoint) && mInput)	//æž å¤–ã‚’ã‚¿ãƒƒãƒ—ã—ãŸã‚‰
+	{
+		InputHide();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool GameScene::InputEnter(Touch *touch, Event *event) {
+	auto target = (Sprite*)event->getCurrentTarget();
+	Rect targetBox = target->getBoundingBox();
+	Point touchPoint = Vec2(touch->getLocation().x, touch->getLocation().y);
+
+	if (targetBox.containsPoint(touchPoint) && mInput)
+	{
+		InputEnd();
+		return true;
+	}
+
+	return false;
+}
+
+void GameScene::InputEnd() {
+	InputHide();
+	auto speakLayer = Speak::create();
+	this->addChild(speakLayer, 5, "speakLayer");
+}
+
+void GameScene::InputHide() {
+	mInput = 0;
+
+	auto editFrame = this->getChildByName("editFrame");
+	auto editLabel = this->getChildByName("editLabel");
+	auto editButton = this->getChildByName("editButton");
+	auto editBox = this->getChildByName("editBox");
+
+	editFrame->runAction(Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), NULL));
+	editLabel->runAction(Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), NULL));
+	editButton->runAction(Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), NULL));
+	editBox->runAction(Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), NULL));
 }
