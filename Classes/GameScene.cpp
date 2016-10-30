@@ -29,14 +29,20 @@ bool GameScene::init() {
 
 	auto userDefalt = UserDefault::getInstance();
 
+	//モード読み込み
+	mMode = userDefalt->getStringForKey("mode");
+	mKarap = getKarap(mMode);
+
 	//背景
-	auto back = Sprite::create("room.png");
+	//auto back = Sprite::create("room.png");
+	auto back = Sprite::create(mKarap->getBGImage());
 	back->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
 	this->addChild(back, 0, "back");
 
 	//カラぴ
-	auto karap = Sprite::create("nomal.png");
+	//auto karap = Sprite::create("nomal.png");
+	auto karap = Sprite::create(mKarap->getCharaImage());
 	karap->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2));
 	this->addChild(karap, 1, "karap");
@@ -162,11 +168,11 @@ void GameScene::update(float delta) {
 	}
 
 	auto percentTxt = (Label*)this->getChildByName("progressText");
-	if (mProgress >= 100.0f) {
+	if (mProgress >= 100.0f) {	//100％になったとき
 		percentTxt->setString("Completed!");
 		auto speakLayer = Speak::create();
-		speakLayer->setID("finish");
 		this->addChild(speakLayer, 5, "speakLayer");
+		speakLayer->setID("finish");
 		mProgress = 0.0f;
 		pTimer->setPercentage(0.0f);
 		//進捗を記録
@@ -316,7 +322,9 @@ bool GameScene::InputEnter(Touch *touch, Event *event) {
 void GameScene::InputEnd() {
 	InputHide();
 	auto speakLayer = Speak::create();
+	auto editBox = (EditBox*)this->getChildByName("editBox");
 	this->addChild(speakLayer, 5, "speakLayer");
+	speakLayer->setID(editBox->getText());
 }
 
 void GameScene::InputHide() {
@@ -331,4 +339,8 @@ void GameScene::InputHide() {
 	editLabel->runAction(Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), NULL));
 	editButton->runAction(Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), NULL));
 	editBox->runAction(Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), NULL));
+}
+
+Karap* GameScene::getKarap(){
+	return mKarap;
 }

@@ -3,6 +3,8 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 
+#include "karapList.h"
+
 class GameScene : public cocos2d::Layer, public cocos2d::ui::EditBoxDelegate {
 public:
 	virtual bool init();
@@ -18,9 +20,12 @@ public:
 
 	void showPunch(int x, int y);
 	void addProgress();
+	Karap* getKarap();
 
 private:
 	int mBaseTime;	//アプリ起動時・バックグラウンド時に初期化
+	std::string mMode;	//カラぴの形態
+	Karap* mKarap;	//カラぴクラス
 	int mFreq;	//タスク出現の頻度
 	int mTaskMax;	//タスクの上限値
 	int mTaskNum;	//表示されているタスクの数
@@ -39,4 +44,6 @@ private:
 
 	void InputEnd();	//入力終了処理
 	void InputHide();	//入力フォームを消す
+
+	Karap* getKarap(std::string);	//karapList.cppに実装
 };

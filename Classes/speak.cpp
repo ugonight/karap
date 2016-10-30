@@ -3,6 +3,7 @@
 #include <string>
 
 #include "speak.h"
+#include "GameScene.h"
 
 #define kModalLayerPriority 1
 
@@ -36,24 +37,7 @@ bool Speak::init()
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);	//優先順位の高いイベントだけを実行する
-	listener->onTouchBegan = [&](Touch *touch, Event*event)->bool {
-		if (endCheck()) {
-			auto box = this->getChildByName("msgbox");
-			box->runAction(FadeOut::create(0.3f));
-			this->runAction(Sequence::create(FadeIn::create(0.3f), RemoveSelf::create(), NULL));
-		}
-		else {
-			auto label = (Label*)getChildByName("msg");
-			for (int i = 0; i < label->getStringLength() + label->getStringNumLines(); i++) {
-				auto AChar = label->getLetter(i);
-				if (nullptr != AChar) {
-					AChar->setOpacity(255);
-				}
-			}
-		}
-
-		return true;
-	};
+	listener->onTouchBegan = CC_CALLBACK_2(Speak::touch, this); 
 	auto dip = Director::getInstance()->getEventDispatcher();
 	dip->addEventListenerWithSceneGraphPriority(listener, this);
 	dip->setPriority(listener, kModalLayerPriority);
@@ -67,6 +51,13 @@ void Speak::setID(std::string id) {
 	auto label1 = (Label*)getChildByName("msg");
 	if (id == "finish") {
 		label1->setString("よく頑張ったな");
+	}
+	else {
+		auto parent = (GameScene*)this->getParent();
+		auto karap = parent->getKarap();
+		mWords = karap->getWords(id);
+		mWordsNum = 0;
+		label1->setString(mWords[mWordsNum]);
 	}
 	setDelayAnime();
 }
@@ -98,4 +89,33 @@ void Speak::setDelayAnime() {
 				));
 		}
 	}
+}
+
+bool Speak::touch(cocos2d::Touch *touch, cocos2d::Event *event) 
+{
+	auto label = (Label*)getChildByName("msg");
+
+	if (endCheck()) {	//表示しきっていたら
+		if (mWordsNum < mWords.size()-1) {	//会話が終了していなければ
+			mWordsNum++;
+			label->setString(mWords[mWordsNum]);
+			setDelayAnime();
+		}
+		else {
+			auto box = this->getChildByName("msgbox");
+			box->runAction(FadeOut::create(0.3f));
+			this->runAction(Sequence::create(FadeIn::create(0.3f), RemoveSelf::create(), NULL));
+		}
+	}
+	else {
+		for (int i = 0; i < label->getStringLength() + label->getStringNumLines(); i++) {
+			auto AChar = label->getLetter(i);
+			if (nullptr != AChar) {
+				AChar->setOpacity(255);
+				AChar->stopAllActions();
+			}
+		}
+	}
+
+	return true;
 }
