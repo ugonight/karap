@@ -49,12 +49,16 @@ bool Speak::init()
 
 void Speak::setID(std::string id) {
 	auto label1 = (Label*)getChildByName("msg");
+	auto parent = (GameScene*)this->getParent();
+	auto karap = parent->getKarap();
+
 	if (id == "finish") {
-		label1->setString("よく頑張ったな");
+		//label1->setString("よく頑張ったな");
+		mWords = karap->getWords("finish");
+		mWordsNum = 0;
+		label1->setString(mWords[mWordsNum]);
 	}
 	else {
-		auto parent = (GameScene*)this->getParent();
-		auto karap = parent->getKarap();
 		mWords = karap->getWords(id);
 		mWordsNum = 0;
 		label1->setString(mWords[mWordsNum]);

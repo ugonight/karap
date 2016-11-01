@@ -18,6 +18,23 @@ Nomal::Nomal() {
 	setWords("それが愛というものさ");
 	addWords();
 	addRemark();
+	
+	//終わり
+	setMsg("finish");
+	setWords("よく頑張ったな");
+	setWords("次の俺もよろしく頼むぜ");
+	setWords("それじゃ、また巡り会う日まで");
+	setWords("グッバイ、唐松ガール");
+	addWords();
+	addRemark();
 
+	//死にたい
+	setMsg("しにたい");
+	setWords("死にたい…か");
+	setWords("二人同時に命を絶てば、次の世界でまた巡り会うことができるだろうか");
+	setWords("今よりもっと幸せな世界で、二人永遠に愛し合い続けることができるのだろうか");
+	setWords("俺は今のお前が一番好きなんだが");
+	addWords();
+	addRemark();
 
 }

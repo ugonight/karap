@@ -1,3 +1,5 @@
+ï»¿#pragma execution_character_set("utf-8")
+
 #include<string>
 #include<map>
 #include<vector>
@@ -13,10 +15,10 @@ string Karap::getCharaImage() { return mCharaImage; }
 string Karap::getBGImage() { return mBGImage; }
 
 vector<string> Karap::getWords(string msg) {
-	//ŒŸõ
+	//æ¤œç´¢
 	string key = "default";
 	for (auto itr = mWordsMap.begin(); itr != mWordsMap.end(); ++itr) {
-		if (itr->first.find(msg) > 0 ) {
+		if (itr->first.find(msg) != -1 ) {
 			key = itr->first;
 			break;
 		}
