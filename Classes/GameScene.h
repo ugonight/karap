@@ -21,11 +21,13 @@ public:
 	void showPunch(int x, int y);
 	void addProgress();
 	Karap* getKarap();
+	void changeForm();
 
 private:
 	int mBaseTime;	//アプリ起動時・バックグラウンド時に初期化
-	std::string mMode;	//カラぴの形態
+	std::string mForm;	//カラぴの形態
 	Karap* mKarap;	//カラぴクラス
+	std::map<std::string, Karap*> mKarapMap;	//カラぴマップ
 	int mFreq;	//タスク出現の頻度
 	int mTaskMax;	//タスクの上限値
 	int mTaskNum;	//表示されているタスクの数
@@ -44,6 +46,9 @@ private:
 
 	void InputEnd();	//入力終了処理
 	void InputHide();	//入力フォームを消す
+	void chageForm2();	//ホワイトアウト？した後
 
-	Karap* getKarap(std::string);	//karapList.cppに実装
+	//karapList.cppに実装
+	//Karap* getKarap(std::string);	
+	void initKarapList();			
 };

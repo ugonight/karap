@@ -29,9 +29,21 @@ bool GameScene::init() {
 
 	auto userDefalt = UserDefault::getInstance();
 
+	initKarapList();	//カラぴマップ初期化
+
 	//モード読み込み
-	mMode = userDefalt->getStringForKey("mode");
-	mKarap = getKarap(mMode);
+	mForm = userDefalt->getStringForKey("form");
+	//mKarap = getKarap(mMode);
+	if (mForm == "") {
+		mKarap = mKarapMap["nomal"];
+		//モードを記録
+		auto userDefalt = UserDefault::getInstance();
+		userDefalt->setStringForKey("form", "nomal");
+		userDefalt->flush();
+	}
+	else {
+		mKarap = mKarapMap[mForm];
+	}
 
 	//背景
 	//auto back = Sprite::create("room.png");
@@ -173,11 +185,7 @@ void GameScene::update(float delta) {
 		auto speakLayer = Speak::create();
 		this->addChild(speakLayer, 5, "speakLayer");
 		speakLayer->setID("finish");
-		mProgress = 0.0f;
-		pTimer->setPercentage(0.0f);
-		//進捗を記録
-		userDefalt->setFloatForKey("progress", mProgress);
-		userDefalt->flush();
+
 	}
 
 	Label* timeLabel = (Label*)getChildByName("timeLabel");
@@ -258,7 +266,7 @@ bool GameScene::karapTouch(Touch *touch, Event *event) {
 			editBox->setFont("fonts/APJapanesefontT.ttf", 32);
 			editBox->setPlaceHolder("ひらがな10文字以内");
 			editBox->setFontColor(Color4B(0, 0, 0, 255));
-			editBox->setMaxLength(10);
+			editBox->setMaxLength(100);
 			editBox->setText("");
 			editBox->setReturnType(EditBox::KeyboardReturnType::DONE);
 			editBox->setInputMode(EditBox::InputMode::SINGLE_LINE);
@@ -324,7 +332,7 @@ void GameScene::InputEnd() {
 	auto speakLayer = Speak::create();
 	auto editBox = (EditBox*)this->getChildByName("editBox");
 	this->addChild(speakLayer, 5, "speakLayer");
-	speakLayer->setID(editBox->getText());
+	speakLayer->setID(editBox->getText() );
 }
 
 void GameScene::InputHide() {
@@ -343,4 +351,57 @@ void GameScene::InputHide() {
 
 Karap* GameScene::getKarap(){
 	return mKarap;
+}
+
+void GameScene::changeForm() {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	auto white = Sprite::create("white.png");
+	white->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height / 2));
+	white->setOpacity(0.0f);
+	white->runAction(Sequence::create(FadeIn::create(0.5f),CallFunc::create(CC_CALLBACK_0(GameScene::chageForm2,this)),NULL));
+	this->addChild(white, 20, "white");
+}
+
+void GameScene::chageForm2() {
+	auto pTimer = (ProgressTimer*)this->getChildByName("progress");
+	auto userDefalt = UserDefault::getInstance();
+
+	//次のフォームを決める
+	bool loop = 1;
+	while (loop) {
+		int num = random(0, (int)mKarapMap.size() - 1), i = 0;
+		for (auto itr = mKarapMap.begin(); itr != mKarapMap.end(); ++itr) {
+			if (i == num) {
+				if (itr->first == mForm) {
+					break;	//前と同じならやりなおし
+				}
+				else {
+					loop = 0;
+					mForm = itr->first;
+					mKarap = itr->second;
+					//モードを記録
+					userDefalt->setStringForKey("form", mForm);
+					break;
+				}
+			}
+			i++;
+		}
+	}
+
+	auto back = (Sprite*)this->getChildByName("back");
+	back->setTexture(mKarap->getBGImage());
+	auto karap = (Sprite*)this->getChildByName("karap");
+	karap->setTexture(mKarap->getCharaImage());
+
+	mProgress = 0.0f;
+	pTimer->setPercentage(0.0f);
+	//進捗を記録
+	userDefalt->setFloatForKey("progress", mProgress);
+	userDefalt->flush();
+
+	auto white = (Sprite*)getChildByName("white");
+	white->runAction(Sequence::create(FadeOut::create(0.5f), RemoveSelf::create(), NULL));
 }

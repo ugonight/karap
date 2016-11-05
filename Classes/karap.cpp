@@ -18,7 +18,7 @@ vector<string> Karap::getWords(string msg) {
 	//検索
 	string key = "default";
 	for (auto itr = mWordsMap.begin(); itr != mWordsMap.end(); ++itr) {
-		if (itr->first.find(msg) != -1 ) {
+		if (msg.find(itr->first) != -1) {
 			key = itr->first;
 			break;
 		}

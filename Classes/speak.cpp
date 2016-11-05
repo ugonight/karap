@@ -30,6 +30,7 @@ bool Speak::init()
 	auto label1 = Label::createWithTTF("ご苦労だったなガール", "fonts/APJapanesefontT.ttf", 30);
 	label1->setDimensions(440, 270);
 	label1->setTextColor(Color4B::WHITE);
+	label1->enableGlow(Color4B::YELLOW);
 	label1->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	label1->setPosition(Vec2(20, 270));
 	this->addChild(label1, 1, "msg");
@@ -52,17 +53,11 @@ void Speak::setID(std::string id) {
 	auto parent = (GameScene*)this->getParent();
 	auto karap = parent->getKarap();
 
-	if (id == "finish") {
-		//label1->setString("よく頑張ったな");
-		mWords = karap->getWords("finish");
-		mWordsNum = 0;
-		label1->setString(mWords[mWordsNum]);
-	}
-	else {
-		mWords = karap->getWords(id);
-		mWordsNum = 0;
-		label1->setString(mWords[mWordsNum]);
-	}
+	mID = id;
+	mWords = karap->getWords(id);
+	mWordsNum = 0;
+	label1->setString(mWords[mWordsNum]);
+
 	setDelayAnime();
 }
 
@@ -109,6 +104,10 @@ bool Speak::touch(cocos2d::Touch *touch, cocos2d::Event *event)
 			auto box = this->getChildByName("msgbox");
 			box->runAction(FadeOut::create(0.3f));
 			this->runAction(Sequence::create(FadeIn::create(0.3f), RemoveSelf::create(), NULL));
+			if (mID == "finish") {
+				auto parent = (GameScene*)this->getParent();
+				parent->changeForm();
+			}
 		}
 	}
 	else {

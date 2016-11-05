@@ -2,9 +2,12 @@
 
 #include "karap.h"
 
-//éŒ¾
-class Nomal : public Karap {
-public:
-	Nomal();
-};
+#define MAKE_CLASS(form) class form : public Karap { \
+						 public: \
+							form(); \
+						 };
 
+
+//éŒ¾
+MAKE_CLASS(Nomal)
+MAKE_CLASS(Mafia)

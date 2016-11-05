@@ -14,6 +14,7 @@ public:
 private:
 	std::vector<std::string> mWords;	//”­Œ¾
 	int mWordsNum;						//”­Œ¾”Ô†
+	std::string mID;					//id
 
 	bool touch(cocos2d::Touch *touch, cocos2d::Event *event);
 

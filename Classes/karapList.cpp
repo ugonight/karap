@@ -3,20 +3,25 @@
 USING_NS_CC;
 using namespace std;
 
-Karap* GameScene::getKarap(string mode) {
-	Karap* karap;
+#define ADD_KARAP(name,clas) mKarapMap[name] = new clas()
 
-	if (mode == "nomal") {
-		karap = new Nomal();
-	}
-	else {
-		karap = new Nomal();
+void GameScene::initKarapList() {
+	ADD_KARAP("nomal", Nomal);
+	ADD_KARAP("mafia", Mafia);
 
-		//モードを記録
-		auto userDefalt = UserDefault::getInstance();
-		userDefalt->setStringForKey("mode", "nomal");
-		userDefalt->flush();
-	}
-
-	return karap;
 }
+
+//Karap* GameScene::getKarap(string mode) {
+//	Karap* karap;
+//
+//	if (mode == "") {
+//		karap = new Nomal();
+//
+//		//モードを記録
+//		auto userDefalt = UserDefault::getInstance();
+//		userDefalt->setStringForKey("mode", "nomal");
+//		userDefalt->flush();
+//	}
+//
+//	return karap;
+//}
