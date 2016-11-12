@@ -185,7 +185,7 @@ void GameScene::update(float delta) {
 		auto speakLayer = Speak::create();
 		this->addChild(speakLayer, 5, "speakLayer");
 		speakLayer->setID("finish");
-
+		mProgress = 0.0f;
 	}
 
 	Label* timeLabel = (Label*)getChildByName("timeLabel");
@@ -367,6 +367,7 @@ void GameScene::changeForm() {
 
 void GameScene::chageForm2() {
 	auto pTimer = (ProgressTimer*)this->getChildByName("progress");
+	auto percentTxt = (Label*)this->getChildByName("progressText");
 	auto userDefalt = UserDefault::getInstance();
 
 	//次のフォームを決める
@@ -396,8 +397,9 @@ void GameScene::chageForm2() {
 	auto karap = (Sprite*)this->getChildByName("karap");
 	karap->setTexture(mKarap->getCharaImage());
 
-	mProgress = 0.0f;
+	//mProgress = 0.0f;
 	pTimer->setPercentage(0.0f);
+	percentTxt->setString("0%%");
 	//進捗を記録
 	userDefalt->setFloatForKey("progress", mProgress);
 	userDefalt->flush();

@@ -5,9 +5,9 @@
 #define MAKE_CLASS(form) class form : public Karap { \
 						 public: \
 							form(); \
-						 };
+						 }
 
 
 //êÈåæ
-MAKE_CLASS(Nomal)
-MAKE_CLASS(Mafia)
+MAKE_CLASS(Nomal);
+MAKE_CLASS(Mafia);
