@@ -9,6 +9,9 @@
 USING_NS_CC;
 using namespace ui;
 
+#include "SimpleAudioEngine.h"
+using namespace CocosDenshion;
+
 //シングルトン
 //static GameScene* instanceOfGameScene;
 //
@@ -23,6 +26,9 @@ bool GameScene::init() {
 		return false;
 
 	this->scheduleUpdate();
+
+	//BGM再生
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm.ogg", true);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -127,7 +133,7 @@ bool GameScene::init() {
 	}
 
 	//xx秒ごとにタスクが出現
-	mFreq = 60 * 6;
+	mFreq = 60 * 3;
 	//タスクの上限
 	mTaskMax = 50;
 	//showPunchが呼び出されているか

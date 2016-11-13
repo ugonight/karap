@@ -7,6 +7,9 @@
 
 USING_NS_CC;
 
+#include "SimpleAudioEngine.h"
+using namespace CocosDenshion;
+
 //static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
 //static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 //static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
@@ -94,6 +97,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	// run
 	director->runWithScene(scene);
 
+	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("bgm.ogg");
+
 	return true;
 }
 
@@ -102,7 +107,7 @@ void AppDelegate::applicationDidEnterBackground() {
 	Director::getInstance()->stopAnimation();
 
 	// if you use SimpleAudioEngine, it must be paused
-	// SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+	 SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 
 	//int saveTime = (int)time(NULL);
 	////バックグラウンドに移動した時間を記録
@@ -116,7 +121,7 @@ void AppDelegate::applicationWillEnterForeground() {
 	Director::getInstance()->startAnimation();
 
 	// if you use SimpleAudioEngine, it must resume here
-	// SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+	 SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 
 	//バックグラウンドに移動した時間を読み込み
 	//auto userDefalt = UserDefault::sharedUserDefault();
