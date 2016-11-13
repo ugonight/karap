@@ -78,4 +78,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-/Resources/fonts/
+Resources/fonts/
