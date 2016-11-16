@@ -13,6 +13,7 @@ Karap::Karap() : mCharaImage(""), mBGImage("") , mCurrentMsg("default") {}
 
 string Karap::getCharaImage() { return mCharaImage; }
 string Karap::getBGImage() { return mBGImage; }
+string Karap::getFormName() { return mFormName; }
 
 vector<string> Karap::getWords(string msg) {
 	//検索

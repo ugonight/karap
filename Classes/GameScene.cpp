@@ -68,6 +68,16 @@ bool GameScene::init() {
 	listener->onTouchBegan = CC_CALLBACK_2(GameScene::karapTouch, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, karap);
 
+	//形態名
+	auto fname = Label::createWithTTF(mKarap->getFormName(), "fonts/APJapanesefontT.ttf", 24);
+	fname->setAnchorPoint(Vec2::ANCHOR_TOP_RIGHT);
+	fname->setPosition(Vec2(origin.x + visibleSize.width - 20,
+		origin.y + visibleSize.height - 80));
+	fname->setColor(Color3B::WHITE);
+	fname->enableOutline(Color4B::BLUE, 2);
+	this->addChild(fname, 5, "fname");
+	
+
 	//タスクを表示させるレイヤー
 	auto taskLayer = Layer::create();
 
@@ -402,6 +412,8 @@ void GameScene::chageForm2() {
 	back->setTexture(mKarap->getBGImage());
 	auto karap = (Sprite*)this->getChildByName("karap");
 	karap->setTexture(mKarap->getCharaImage());
+	auto fname = (Label*)this->getChildByName("fname");
+	fname->setString(mKarap->getFormName());
 
 	//mProgress = 0.0f;
 	pTimer->setPercentage(0.0f);

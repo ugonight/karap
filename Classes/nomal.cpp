@@ -3,6 +3,8 @@
 #include "karapList.h"
 
 Nomal::Nomal() {
+	mFormName = "カラーパーカー";
+
 	mCharaImage = "nomal.png";
 	mBGImage = "room.png";
 
@@ -34,6 +36,32 @@ Nomal::Nomal() {
 	setWords("二人同時に命を絶てば、次の世界でまた巡り会うことができるだろうか");
 	setWords("今よりもっと幸せな世界で、二人永遠に愛し合い続けることができるのだろうか");
 	setWords("俺は今のお前が一番好きなんだが");
+	addWords();
+	addRemark();
+
+	//死ね
+	setMsg("しね");
+	setWords("ああ、俺だってガールのためなら何度だって死ねるさ。");
+	setWords("お前はいつだって、その痛みを苦しみで自分を傷付けて生きてきた。");
+	setWords("その痛みを俺にも分けてくれないか。");
+	addWords();
+	addRemark();
+
+	//おはよう
+	setMsg("おはよう");
+	setWords("グッモーニン！唐松ガール");
+	setWords("ちゃんと起きることができるなんて偉いな");
+	setWords("ぐっすり眠れたなら昨日できなかったこともできるかもしれない");
+	setWords("さあ、今日も新たな発見を見つけに行こう");
+	addWords();
+	addRemark();
+
+	//一松
+	setMsg("いちまつ");
+	setWords("ああ、市松のことか");
+	setWords("市松は俺のブラザーだぜ");
+	setWords("シャイなキティみたいでとてもキュートなんだ");
+	setWords("あいつは俺のことは嫌いみたいなんだがな");
 	addWords();
 	addRemark();
 

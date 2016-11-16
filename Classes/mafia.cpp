@@ -3,6 +3,8 @@
 #include "karapList.h"
 
 Mafia::Mafia() {
+	mFormName = "マフィア";
+
 	mCharaImage = "mafia.png";
 	mBGImage = "mafia_r.png";
 
@@ -30,10 +32,10 @@ Mafia::Mafia() {
 
 	//死にたい
 	setMsg("しにたい");
-	setWords("死にたい…か");
-	setWords("二人同時に命を絶てば、次の世界でまた巡り会うことができるだろうか");
-	setWords("今よりもっと幸せな世界で、二人永遠に愛し合い続けることができるのだろうか");
-	setWords("俺は今のお前が一番好きなんだが");
+	setWords("おっと、そうはさせないぜ。");
+	setWords("せっかく生かしてやってるというのに、いただけないガールだ。");
+	setWords("お前の命は俺が管理してるんだ");
+	setWords("一生逃がさないぜ");
 	addWords();
 	addRemark();
 

@@ -8,12 +8,14 @@ public:
 
 	std::string getCharaImage();
 	std::string getBGImage();
+	std::string getFormName();
 
 	std::vector<std::string> getWords(std::string msg);
 
 protected:
 	std::string mCharaImage;	//キャラクター画像
 	std::string mBGImage;		//背景画像
+	std::string mFormName;		//形態
 
 	std::map<std::string, std::vector<std::vector<std::string>>> mWordsMap;	//発言リスト
 
