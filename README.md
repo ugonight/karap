@@ -1,7 +1,8 @@
 生きているだけで褒めてくれる松野唐松アプリ
 ====
 
-カラ松くんが生きているだけで褒めてくれます
+カラ松くんが生きているだけで褒めてくれます  
+紹介動画→<http://www.nicovideo.jp/watch/sm30068034>
 
 ## Description
 
@@ -15,7 +16,7 @@
 
 ## Demo
 
-近日未公開予定
+apk配布します→<https://www.dropbox.com/s/q4etv839ogbxjmo/karap_-release-signed.apk?dl=0>  
 
 ## VS. 
 
